@@ -16,10 +16,9 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa  # Menggunakan private key dari GitHub secrets
+          echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa  
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $EC2_PUBLIC_IP >> ~/.ssh/known_hosts  # Menambahkan EC2 public IP ke known_hosts
-
+          ssh-keyscan -H $EC2_PUBLIC_IP >> ~/.ssh/known_hosts  
       - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/id_rsa rizki@$EC2_PUBLIC_IP "cd /home/rizki/github-actions && git pull && npm install && pm2 restart app"  # Ganti dengan perintah yang sesuai
