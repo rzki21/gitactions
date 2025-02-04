@@ -1,4 +1,27 @@
-- name: Check EC2 IP and SSH Key
-  run: |
-    echo "EC2 Public IP: $EC2_PUBLIC_IP"
-    echo "SSH Key Path: ~/.ssh/id_rsa"
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Trigger saat ada push ke branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Menjalankan workflow di sistem operasi Ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Mengambil kode dari GitHub
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa  # Menggunakan private key dari GitHub secrets
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $EC2_PUBLIC_IP >> ~/.ssh/known_hosts  # Menambahkan EC2 public IP ke known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa rizki@$EC2_PUBLIC_IP "cd /home/rizki/github-actions && git pull && npm install && pm2 restart app"  # Ganti dengan perintah yang sesuai
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}  # Public IP EC2 instance disimpan di GitHub secrets
