@@ -16,13 +16,13 @@ jobs:
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no rizki@54.169.187.139 << 'EOF'
             # Periksa dan pastikan package.json valid
-            cat /home/rizki/gitactions/package.json 
+            cat /home/rizki/gitactions/package.json | python3 -m json.tool || exit 1
 
             # Pull update dari git
             cd /home/rizki/gitactions
