@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Sesuaikan dengan branch yang ingin dideploy
+      - main
 
 jobs:
   deploy:
@@ -15,16 +15,14 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd /home/gitactions${{ secrets.EC2_USER }}/your-app-directory
-          git pull origin main
-          npm install
-          npm run build
-          pm2 restart all
-          exit
+          ssh -o StrictHostKeyChecking=no -i private_key.pem rizki@54.169.187.139 << 'EOF'
+            cd /home/rizki/gitactions
+            git pull origin main
+            npm install --production
+            pm2 restart all
           EOF
