@@ -1,0 +1,29 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Deploy otomatis saat ada perubahan di branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Menambahkan private key ke GitHub Secrets
+
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no rizki@54.169.187.139 << 'EOF'
+          cd /home/rizki/github-actions
+          git pull origin main
+          npm install
+          npm run build
+          sudo systemctl restart nginx  # Atau restart server sesuai aplikasi
+        EOF
