@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Sesuaikan dengan branch yang diinginkan
+      - main
 
 jobs:
   deploy:
@@ -21,8 +21,19 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no rizki@54.169.187.139 << 'EOF'
+            # Periksa dan pastikan package.json valid
+            cat /home/rizki/gitactions/package.json | python -m json.tool || exit 1
+
+            # Pull update dari git
             cd /home/rizki/gitactions
             git pull origin main
-            npm install --production
-            pm2 restart all
+
+            # Install dependencies
+            npm install --production || exit 1
+
+            # Install PM2 jika belum ada
+            npm install pm2 -g || exit 1
+
+            # Restart aplikasi
+            pm2 restart all || exit 1
           EOF
