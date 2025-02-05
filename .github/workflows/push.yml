@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - main  # Menyesuaikan dengan branch yang ingin di-deploy
 
 jobs:
   deploy:
@@ -15,12 +15,14 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 54.169.187.139 >> ~/.ssh/known_hosts  # Menambahkan host ke known_hosts
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem rizki@54.169.187.139 << 'EOF'
+          ssh -o StrictHostKeyChecking=no rizki@54.169.187.139 << 'EOF'
             cd /home/rizki/gitactions
             git pull origin main
             npm install --production
