@@ -21,19 +21,5 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no rizki@54.169.187.139 << 'EOF'
-            # Periksa dan pastikan package.json valid
-            cat /home/rizki/gitactions/package.json | python3 -m json.tool || exit 1
-
-            # Pull update dari git
-            cd /home/rizki/gitactions
-            git pull origin main
-
-            # Install dependencies
-            npm install --production || exit 1
-
-            # Install PM2 jika belum ada
-            npm install pm2 -g || exit 1
-
-            # Restart aplikasi
-            pm2 restart all || exit 1
+           touch /home/rizki2/ngopi.txt
           EOF
