@@ -23,4 +23,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no rizki2@18.138.251.184 << 'EOF'
            touch /home/rizki2/ngopi.txt
            mkdir /home/rizki2/suko_rondo
+           sudo apt update 
           EOF
