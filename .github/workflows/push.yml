@@ -21,7 +21,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no reoreki@13.229.232.233 << 'EOF'
-           touch /home/rizki2/ngopi.txt
+           touch /home/reoreki/ngopi.txt
           
             
             
