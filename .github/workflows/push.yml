@@ -21,7 +21,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no cloudsenja@54.179.237.110 << 'EOF'
-           touch /home/reoreki/ngopi.txt
+           touch /home/cloudsenja/ngopi.txt
           
             
             
